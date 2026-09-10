@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1504 1229" width="1504" height="1229">
+<defs>
+  <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#0B3D7A"/>
+    <stop offset="55%" stop-color="#05306B"/>
+    <stop offset="100%" stop-color="#041F42"/>
+  </linearGradient>
+  <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#F8D372"/>
+    <stop offset="50%" stop-color="#F2B51D"/>
+    <stop offset="100%" stop-color="#D69C12"/>
+  </linearGradient>
+  <linearGradient id="goldSoft" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#F2B51D" stop-opacity=".15"/>
+    <stop offset="100%" stop-color="#F8D372" stop-opacity=".9"/>
+  </linearGradient>
+  <linearGradient id="figFill" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#FFFFFF"/>
+    <stop offset="100%" stop-color="#D6E6FA"/>
+  </linearGradient>
+  <linearGradient id="figFillDeep" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#F5F9FF"/>
+    <stop offset="100%" stop-color="#A6CBEE"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#F2B51D" stop-opacity=".35"/>
+    <stop offset="100%" stop-color="#F2B51D" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="glowBlue" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#4A7EBD" stop-opacity=".4"/>
+    <stop offset="100%" stop-color="#4A7EBD" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+
+<!-- background -->
+<rect width="1504" height="1229" fill="url(#bg)"/>
+
+<!-- faint skyline -->
+<g opacity=".13" fill="#A6CBEE">
+  <rect x="-40" y="760" width="90" height="330"/>
+  <rect x="60" y="690" width="70" height="400"/>
+  <rect x="150" y="820" width="60" height="270"/>
+  <rect x="230" y="640" width="85" height="450"/>
+  <rect x="335" y="750" width="65" height="340"/>
+  <rect x="60" y="640" width="20" height="60"/>
+  <rect x="255" y="590" width="16" height="60"/>
+</g>
+
+<!-- soft glows -->
+<circle cx="430" cy="560" r="420" fill="url(#glowBlue)"/>
+<circle cx="1180" cy="520" r="480" fill="url(#glow)"/>
+
+<!-- growth bars -->
+<g>
+  <rect x="1004" y="760" width="92" height="240" rx="14" fill="url(#gold)" opacity=".92"/>
+  <rect x="1132" y="650" width="92" height="350" rx="14" fill="url(#gold)"/>
+  <rect x="1260" y="520" width="92" height="480" rx="14" fill="url(#gold)"/>
+  <rect x="1388" y="380" width="92" height="620" rx="14" fill="url(#gold)"/>
+</g>
+
+<!-- upward arrow -->
+<path d="M980 870 C1120 760, 1230 560, 1300 300" fill="none" stroke="url(#gold)" stroke-width="20" stroke-linecap="round"/>
+<path d="M1226 268 L1330 224 L1350 336 Z" fill="url(#gold)"/>
+
+<!-- bottom decorative curve -->
+<path d="M0 1060 C 260 1160, 560 1160, 760 1040 C 980 900, 1230 900, 1504 1010 L1504 1229 L0 1229 Z" fill="#041F42"/>
+<path d="M0 1060 C 260 1160, 560 1160, 760 1040 C 980 900, 1230 900, 1504 1010" fill="none" stroke="url(#gold)" stroke-width="6" opacity=".85"/>
+
+<!-- sparkles (brand star mark, simplified) -->
+<g fill="url(#gold)" opacity=".8">
+  <path d="M1120 150 l10 34 34 10 -34 10 -10 34 -10 -34 -34 -10 34 -10 Z"/>
+  <path d="M330 210 l7 22 22 7 -22 7 -7 22 -7 -22 -22 -7 22 -7 Z" opacity=".7"/>
+  <path d="M700 120 l6 18 18 6 -18 6 -6 18 -6 -18 -18 -6 18 -6 Z" opacity=".55"/>
+</g>
+
+<!-- ===== family group ===== -->
+<!-- father (left, tallest) -->
+<g>
+  <ellipse cx="330" cy="905" rx="150" ry="34" fill="#000" opacity=".18"/>
+  <path d="M195 900 C190 720 210 590 330 560 C450 590 470 720 465 900 Z" fill="url(#figFillDeep)"/>
+  <circle cx="330" cy="470" r="88" fill="url(#figFillDeep)"/>
+</g>
+
+<!-- mother (center-back, medium) -->
+<g>
+  <ellipse cx="560" cy="930" rx="140" ry="32" fill="#000" opacity=".18"/>
+  <path d="M440 925 C434 760 452 640 560 612 C668 640 686 760 680 925 Z" fill="url(#figFill)"/>
+  <circle cx="560" cy="532" r="80" fill="url(#figFill)"/>
+</g>
+
+<!-- child (front, shortest) -->
+<g>
+  <ellipse cx="452" cy="1005" rx="110" ry="26" fill="#000" opacity=".2"/>
+  <path d="M356 1000 C352 880 366 800 452 780 C538 800 552 880 548 1000 Z" fill="url(#gold)" opacity=".95"/>
+  <circle cx="452" cy="722" r="62" fill="url(#gold)" opacity=".95"/>
+</g>
+
+<!-- connecting arms (togetherness) -->
+<path d="M300 760 C 360 820, 400 840, 430 860" fill="none" stroke="#A6CBEE" stroke-width="26" stroke-linecap="round" opacity=".65"/>
+<path d="M560 760 C 520 820, 490 840, 470 858" fill="none" stroke="#D6E6FA" stroke-width="24" stroke-linecap="round" opacity=".65"/>
+
+<!-- eyebrow ring above group -->
+<circle cx="330" cy="470" r="88" fill="none" stroke="url(#gold)" stroke-width="5" opacity=".7"/>
+<circle cx="560" cy="532" r="80" fill="none" stroke="url(#gold)" stroke-width="5" opacity=".55"/>
+<circle cx="452" cy="722" r="62" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".6"/>
+</svg>
