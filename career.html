@@ -221,15 +221,15 @@
       <div class="apply-head">
         <span class="eyebrow">Application Form</span>
         <h3>Apply to join <span class="gold-text">Vetrivaagai</span></h3>
-        <p>Takes about two minutes. Fill it in and your application reaches our HR team on
-          WhatsApp straight away &mdash; no login, no attachments needed at this stage.</p>
+        <p>Takes about two minutes. Fill it in, attach your resume, and the whole application is
+          emailed straight to our HR team at <b>enroll@vetrivaagai.com</b>.</p>
       </div>
 
       <div class="mascot-band rv">
         <figure class="mascot-fig"><picture><source srcset="assets/img/mascot.webp" type="image/webp"><img class="mascot-img" src="assets/img/mascot.png" alt="Vetrivaagai mascot holding a rupee briefcase" width="415" height="780" loading="lazy" decoding="async"></picture></figure>
         <div class="mb-copy">
           <h3>Hi! Shall we get you started?</h3>
-          <p>Pick <b>Employee</b> or <b>Sales</b>, fill in your details, and your application lands with our HR team straight away. No resume upload needed &mdash; just bring it along to the interview.</p>
+          <p>Pick <b>Employee</b> or <b>Sales</b>, fill in your details, and attach your resume &mdash; a PDF or Word file up to 2&nbsp;MB. Everything lands with our HR team straight away.</p>
           <span class="mb-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2Z"/></svg> Vetri &middot; Your Chit Buddy</span>
         </div>
       </div>
@@ -242,7 +242,15 @@
         <span class="apply-step on"><i>3</i>Send</span>
       </div>
 
-      <form id="applyForm" novalidate>
+      <form id="applyForm" action="https://formsubmit.co/enroll@vetrivaagai.com" method="POST" enctype="multipart/form-data" accept-charset="UTF-8" novalidate>
+
+        <!-- Delivery settings: the filled form + resume are emailed to enroll@vetrivaagai.com -->
+        <input type="hidden" name="_subject" id="afSubject" value="New Career Application — vetrivaagai.com">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://vetrivaagai.com/career.html?applied=1">
+        <input type="hidden" name="Source" value="vetrivaagai.com / Career page">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
 
         <fieldset style="border:0;padding:0;margin:0 0 4px">
           <legend class="eyebrow" style="margin-bottom:14px">I am applying for</legend>
@@ -331,9 +339,33 @@
           </div>
 
           <div class="field full">
+            <label for="afResume">Upload Your Resume <i>*</i></label>
+            <div class="resume-drop" id="afResumeDrop">
+              <input type="file" id="afResume" name="attachment"
+                     accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                     aria-describedby="afResumeHelp" required>
+              <span class="rd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v13"/></svg></span>
+              <span class="rd-txt">
+                <b>Choose a file or drop it here</b>
+                <small id="afResumeHelp">PDF or Word document &middot; maximum size 2&nbsp;MB</small>
+              </span>
+              <span class="rd-btn" aria-hidden="true">Browse</span>
+            </div>
+            <div class="resume-picked" id="afResumeInfo" hidden>
+              <span class="rp-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg></span>
+              <span class="rp-name"></span>
+              <span class="rp-size"></span>
+              <button type="button" class="rp-clear" id="afResumeClear" aria-label="Remove the selected file">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <span class="err">Please attach your resume as a PDF or Word file under 2&nbsp;MB.</span>
+          </div>
+
+          <div class="field full">
             <label for="afAbout">Tell Us About Yourself</label>
             <textarea id="afAbout" name="about" placeholder="A few lines on your background, current work, and why this role interests you."></textarea>
-            <small class="hint">Bring your resume to the interview &mdash; you do not need to upload anything now.</small>
+            <small class="hint">Optional &mdash; your resume covers the rest.</small>
           </div>
 
         </div>
@@ -345,23 +377,26 @@
         </label>
 
         <div class="apply-submit">
-          <button type="submit" class="btn btn-gold">Submit Application
+          <button type="submit" class="btn btn-gold" id="afSubmit">Submit Application
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
+          <button type="button" class="btn btn-ghost" id="afWhatsApp">Send Details on WhatsApp</button>
           <a class="btn btn-ghost" href="tel:+919600713333">Call 96007 13333</a>
-          <p class="apply-note">Your application opens in WhatsApp, pre-filled and ready to send.</p>
+          <p class="apply-note">Your details and resume are emailed straight to our HR team at
+            enroll@vetrivaagai.com. The WhatsApp option sends your details only &mdash; the resume
+            needs the form above.</p>
         </div>
 
       </form>
 
       <div class="apply-done" id="applyDone" role="status">
         <div class="ad-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg></div>
-        <h3>Your application is ready</h3>
-        <p>WhatsApp should have opened with your details filled in &mdash; just press send.
-          If it did not open, tap the button below or call us directly.</p>
+        <h3>Your application has been sent</h3>
+        <p>Your details and resume have reached our HR team at enroll@vetrivaagai.com.
+          We review every application and call back shortly if your profile matches an opening.</p>
         <div class="btn-row" style="justify-content:center">
-          <a class="btn btn-gold" id="applyRetry" href="https://wa.me/919600713333" target="_blank" rel="noopener noreferrer">Open WhatsApp Again</a>
-          <button type="button" class="btn btn-ghost" id="applyAgain">Submit Another Application</button>
+          <button type="button" class="btn btn-gold" id="applyAgain">Submit Another Application</button>
+          <a class="btn btn-ghost" id="applyRetry" href="https://wa.me/919600713333" target="_blank" rel="noopener noreferrer">Chat with HR on WhatsApp</a>
         </div>
       </div>
 
