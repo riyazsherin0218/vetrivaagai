@@ -517,40 +517,45 @@
        - Other browsers: WhatsApp opens with the details filled in and the
          applicant attaches the resume in that chat (WhatsApp links cannot
          carry files). */
+    /* Step 1 — open the HR chat (96007 13333) directly with every detail
+       typed in. WhatsApp links can carry text only, so step 2 sends the
+       resume file into the same chat. */
+    var resumeBtn = document.querySelector('#afSendResume');
+
+    function canShareResume(file) {
+      try {
+        return !!(file && navigator.canShare && navigator.share &&
+          navigator.canShare({ files: [file] }));
+      } catch (err) { return false; }
+    }
+
     function sendOnWhatsApp() {
       if (!validate()) return;
       var msg = buildMessage();
       var file = resumeInput && resumeInput.files && resumeInput.files[0];
-
-      /* Keep a copy of the message on the clipboard in case WhatsApp drops
-         the text when a document is attached. */
-      copyText(msg);
-
-      var canShareFile = false;
-      try {
-        canShareFile = !!(file && navigator.canShare && navigator.share &&
-          navigator.canShare({ files: [file] }));
-      } catch (err) { canShareFile = false; }
-
-      if (canShareFile) {
-        navigator.share({ files: [file], text: msg, title: 'Career Application' })
-          .then(function () {
-            showWaHelp('Sent? If the chat shows only your resume, paste the message ' +
-              '(already copied) into the same chat.');
-          })
-          .catch(function (err) {
-            if (err && err.name === 'AbortError') return; /* they closed the sheet */
-            openWaChat(msg);
-            showWaHelp('WhatsApp has opened with your details. Please attach your resume <b>' +
-              file.name + '</b> in that chat (tap the paperclip, then Document) before sending.');
-          });
-        return;
-      }
-
       openWaChat(msg);
-      showWaHelp('WhatsApp has opened with your details filled in. Please attach your resume' +
-        (file ? ' <b>' + file.name + '</b>' : '') +
-        ' in that chat (paperclip &rarr; Document) and press send.');
+
+      var isPhone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (file && isPhone && canShareResume(file) && resumeBtn) {
+        resumeBtn.hidden = false;
+        showWaHelp('<b>Step 1 done:</b> press Send in WhatsApp. <b>Step 2:</b> come back here and tap ' +
+          '<b>Send Resume on WhatsApp</b>, then choose our HR chat (96007 13333).');
+      } else {
+        showWaHelp('<b>Step 1 done:</b> WhatsApp has opened the HR chat (96007 13333) with your details &mdash; press Send. ' +
+          '<b>Step 2:</b> attach your resume' + (file ? ' <b>' + file.name + '</b>' : '') +
+          ' in the same chat (paperclip &rarr; Document, or drag the file into the chat).');
+      }
+    }
+
+    if (resumeBtn) {
+      resumeBtn.addEventListener('click', function () {
+        var file = resumeInput && resumeInput.files && resumeInput.files[0];
+        if (!canShareResume(file)) return;
+        navigator.share({ files: [file], title: 'Resume' }).then(function () {
+          showWaHelp('Thank you! Your details and resume have been sent to our HR team.');
+          resumeBtn.hidden = true;
+        }).catch(function () { /* closed the share sheet — they can tap again */ });
+      });
     }
 
     applyForm.addEventListener('submit', function (e) {
