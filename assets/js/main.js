@@ -479,60 +479,87 @@
       if (v('#afCity')) lines.push('Location: ' + v('#afCity'));
       if (v('#afAbout')) lines.push('', 'About: ' + v('#afAbout'));
       if (resumeInput && resumeInput.files && resumeInput.files[0]) {
-        lines.push('', 'Resume: ' + resumeInput.files[0].name +
-          ' (please attach it here, or submit the website form to email it)');
+        lines.push('', 'Resume: ' + resumeInput.files[0].name + ' (attached)');
       }
       lines.push('', 'Sent from vetrivaagai.com / career page');
       return lines.join('\n');
     }
 
-    var submitBtn = applyForm.querySelector('#afSubmit');
-    var submitBtnHTML = submitBtn ? submitBtn.innerHTML : '';
+    var submitBtn = null;           /* the email submit button was removed */
+    var submitBtnHTML = '';
+    var waBtn = document.querySelector('#afWhatsApp');
+    var waHelp = document.querySelector('#afWaHelp');
 
-    /* Submit: the form posts natively (multipart) so the resume travels with it
-       and the whole application is emailed to enroll@vetrivaagai.com. */
-    applyForm.addEventListener('submit', function (e) {
-      if (!validate()) {
-        e.preventDefault();
+    function showWaHelp(html) {
+      if (!waHelp) return;
+      waHelp.innerHTML = html;
+      waHelp.hidden = false;
+    }
+
+    function copyText(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text).catch(function () {});
+        }
+      } catch (err) { /* ignore */ }
+      return Promise.resolve();
+    }
+
+    function openWaChat(msg) {
+      window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg),
+        '_blank', 'noopener');
+    }
+
+    /* The whole application goes to HR on WhatsApp.
+       - Phones / tablets (and browsers with a share sheet): the details AND the
+         resume file are shared together — the applicant picks WhatsApp, then
+         the HR chat (96007 13333).
+       - Other browsers: WhatsApp opens with the details filled in and the
+         applicant attaches the resume in that chat (WhatsApp links cannot
+         carry files). */
+    function sendOnWhatsApp() {
+      if (!validate()) return;
+      var msg = buildMessage();
+      var file = resumeInput && resumeInput.files && resumeInput.files[0];
+
+      /* Keep a copy of the message on the clipboard in case WhatsApp drops
+         the text when a document is attached. */
+      copyText(msg);
+
+      var canShareFile = false;
+      try {
+        canShareFile = !!(file && navigator.canShare && navigator.share &&
+          navigator.canShare({ files: [file] }));
+      } catch (err) { canShareFile = false; }
+
+      if (canShareFile) {
+        navigator.share({ files: [file], text: msg, title: 'Career Application' })
+          .then(function () {
+            showWaHelp('Sent? If the chat shows only your resume, paste the message ' +
+              '(already copied) into the same chat.');
+          })
+          .catch(function (err) {
+            if (err && err.name === 'AbortError') return; /* they closed the sheet */
+            openWaChat(msg);
+            showWaHelp('WhatsApp has opened with your details. Please attach your resume <b>' +
+              file.name + '</b> in that chat (tap the paperclip, then Document) before sending.');
+          });
         return;
       }
 
-      /* A subject line the HR inbox can scan at a glance */
-      var subject = applyForm.querySelector('#afSubject');
-      if (subject) {
-        var who = applyForm.querySelector('#afName').value.trim();
-        subject.value = 'Career Application — ' + currentTrack() + ' — ' +
-          (roleSelect.value || 'Position not specified') + (who ? ' — ' + who : '');
-      }
+      openWaChat(msg);
+      showWaHelp('WhatsApp has opened with your details filled in. Please attach your resume' +
+        (file ? ' <b>' + file.name + '</b>' : '') +
+        ' in that chat (paperclip &rarr; Document) and press send.');
+    }
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending your application…';
-      }
-      /* No preventDefault — the browser posts the form and its attachment. */
+    applyForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      sendOnWhatsApp();
     });
 
-    /* Optional: send the typed details over WhatsApp (details only, no file) */
-    var waBtn = document.querySelector('#afWhatsApp');
     if (waBtn) {
-      waBtn.addEventListener('click', function () {
-        var name = applyForm.querySelector('#afName');
-        var phone = applyForm.querySelector('#afPhone');
-        var okName = name.value.trim().length >= 2;
-        var okPhone = /^[6-9]\d{9}$/.test(phone.value.replace(/\D/g, '').slice(-10));
-        setInvalid(name, !okName);
-        setInvalid(phone, !okPhone);
-        if (!okName || !okPhone) {
-          var bad = okName ? phone : name;
-          bad.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          bad.focus({ preventScroll: true });
-          return;
-        }
-        window.open(
-          'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildMessage()),
-          '_blank', 'noopener'
-        );
-      });
+      waBtn.addEventListener('click', sendOnWhatsApp);
     }
 
     /* Coming back from the mail handler (?applied=1) — show the thank-you panel */
@@ -622,6 +649,34 @@
           '<a href="plans.html#plans">View all plans</a>';
         note.hidden = false;
       }
+    }
+  }
+
+  /* ---------- Welcome pop-up (home page) ---------- */
+  /* Shows once each time the site is opened (once per browser tab session). */
+  var wPop = document.getElementById('welcomePop');
+  if (wPop) {
+    var seen = false;
+    try { seen = sessionStorage.getItem('vv_welcome_seen') === '1'; } catch (err) { seen = false; }
+    if (!seen) {
+      var closePop = function () {
+        wPop.classList.remove('show');
+        document.body.classList.remove('wp-open');
+        setTimeout(function () { wPop.hidden = true; }, 300);
+        document.removeEventListener('keydown', onKey);
+      };
+      var onKey = function (e) { if (e.key === 'Escape') closePop(); };
+      setTimeout(function () {
+        wPop.hidden = false;
+        document.body.classList.add('wp-open');
+        requestAnimationFrame(function () { wPop.classList.add('show'); });
+        var btn = document.getElementById('welcomeClose');
+        if (btn) btn.focus({ preventScroll: true });
+      }, 600);
+      try { sessionStorage.setItem('vv_welcome_seen', '1'); } catch (err) { /* ignore */ }
+      document.getElementById('welcomeClose').addEventListener('click', closePop);
+      wPop.addEventListener('click', function (e) { if (e.target === wPop) closePop(); });
+      document.addEventListener('keydown', onKey);
     }
   }
 })();
